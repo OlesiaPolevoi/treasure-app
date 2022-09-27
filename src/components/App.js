@@ -1,21 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import chests from "./data";
 import Chest from "./Chest";
 
 function App() {
-  const [chestsArr, setChestsArr] = useState(chests);
+  const [chestsArr, setChestsArr] = useState([]);
+  console.log(chestsArr);
+
+  //NOTE - rethink function's naming
+  function generateRandomArray() {
+    const randomIndex = Math.floor(Math.random() * 9);
+    console.log(randomIndex);
+    const arrOfChests = [];
+    for (let i = 0; i < 9; i++) {
+      arrOfChests.push({
+        id: i,
+        treasure: randomIndex === i,
+        clicked: false,
+      });
+    }
+    return arrOfChests;
+  }
+
+  useEffect(() => {
+    setChestsArr(generateRandomArray());
+  }, []);
 
   function toggle(id) {
-    // console.log(id, "id clicked");
-
-    // console.log(chestsArr.treasure ? "Yes Here" : "Nope try again");
-
     setChestsArr((prevChestsArr) => {
       return prevChestsArr.map((el) => {
         return el.id === id ? { ...el, clicked: !el.clicked } : el;
       });
     });
+  }
+
+  function hideTreasure() {
+    setChestsArr(generateRandomArray());
   }
 
   return (
@@ -35,7 +54,7 @@ function App() {
           );
         })}
       </div>
-      <button>Hide treasure</button>
+      <button onClick={hideTreasure}>Hide treasure</button>
     </div>
   );
 }
